@@ -1,11 +1,41 @@
 from cmu_cs3_graphics import *
 from .avatar import Avatar
+import random
 
 class Student(Avatar):
     studentPositions = []
     def __init__(self, name):
         super().__init__(name)
         Student.studentPositions.append((self.left, self.top))
+        self.label = 'Student'
+        self.avatar = [ [0, 0, 1, 1, 1, 1, 0, 0],
+                        [0, 1, 1, 1, 1, 1, 1, 0],
+                        [1, 2, 2, 2, 2, 2, 2, 1],
+                        [1, 2, 5, 2, 2, 5, 2, 1],
+                        [1, 2, 5, 2, 2, 5, 2, 1],
+                        [1, 2, 2, 2, 2, 2, 2, 1],
+                        [0, 0, 2, 2, 2, 2, 0, 0],
+                        [0, 0, 0, 2, 2, 0, 0, 0],
+                        [3, 3, 3, 3, 3, 3, 3, 3],
+                        [3, 0, 3, 3, 3, 3, 0, 3],
+                        [2, 0, 3, 3, 3, 3, 0, 2],
+                        [2, 0, 3, 3, 3, 3, 0, 2],
+                        [2, 0, 3, 3, 3, 3, 0, 2],
+                        [2, 0, 3, 3, 3, 3, 0, 2],
+                        [0, 0, 4, 4, 4, 4, 0, 0],
+                        [0, 0, 4, 4, 4, 4, 0, 0],
+                        [0, 0, 4, 0, 0, 4, 0, 0],
+                        [0, 0, 4, 0, 0, 4, 0, 0],
+                        [0, 0, 4, 0, 0, 4, 0, 0],
+                        [0, 0, 5, 0, 0, 5, 0, 0]]
+        self.colors = self.pickColors() + ['black']
 
-    def __repr__(self):
-        return f'I am a student. My name is {self.name}.'
+    def pickColors(self):
+        colors = []
+        for i in range(4):
+            red = random.randrange(1,255)
+            blue = random.randrange(1,255)
+            green = random.randrange(1,255)
+            colors.append(rgb(red, blue, green))
+        return colors
+

@@ -6,6 +6,4 @@ class TA(Avatar):
     def __init__(self, name):
         super().__init__(name)
         TA.tapositions.append((self.left, self.top))
-
-    def __repr__(self):
-        return f'I am a TA. My name is {self.name}.'
+        self.label = 'TA'
