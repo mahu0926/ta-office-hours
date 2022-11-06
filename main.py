@@ -1171,6 +1171,8 @@ def main_onStep(app):
     if app.steps % 10 == 0:
         app.timer -= 1
         app.steps = 0
+    if app.timer == 0:
+        setActiveScreen('losing')
 
 def main_redrawAll(app):
     drawRect(0, app.height/5, app.width, app.height/5*4, fill='antiqueWhite')
@@ -1238,8 +1240,7 @@ def main_onMousePress(app, mouseX, mouseY):
                     app.queue[app.queuePosition][2] = True
                     app.queuePosition = (app.queuePosition + 1)
                     if app.queuePosition == app.numStudents:
-                        studentsAndTablesAndQueue(app)
-                        app.queuePosition = 0
+                        setActiveScreen('winning')
                     app.selectedQuestion = None
 
 def checkQueue(app, left, top, index):
@@ -1247,6 +1248,22 @@ def checkQueue(app, left, top, index):
     positions = Student.studentPositions
     studentIndex = positions.index((left, top, index))
     return app.students[studentIndex].name == queueName
+
+
+##### ending splash screens ####
+def winning_redrawAll(app):
+    drawRect(0, 0, app.width, app.height, fill='blue')
+    drawString(app, "Congrats, you've survived", 50, 200, 12, 'white')
+    drawString(app, "OFFICE HOURS", 250, 350, 15, 'white')
+    drawString(app, 'Thank you for playing :)', app.width/2-430, 575, 10, 'white')
+    drawString(app, 'Created for Hack 112 by GAMA, 2022', app.width/2-300, 780, 4, 'darkGray')
+
+def losing_redrawAll(app):
+    drawRect(0, 0, app.width, app.height, fill='blue')
+    drawString(app, "OH NO!!", 380, 200, 15, 'white')
+    drawString(app, "You've been fired.", 150, 350, 15, 'white')
+    drawString(app, 'Thank you for playing :)', app.width/2-430, 575, 10, 'white')
+    drawString(app, 'Created for Hack 112 by GAMA, 2022', app.width/2-300, 780, 4, 'darkGray')
 
 def main():
     runAppWithScreens(initialScreen='main', width=1200, height=800)
