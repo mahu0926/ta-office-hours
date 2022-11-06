@@ -4,6 +4,7 @@ import random
 
 class Student(Avatar):
     studentPositions = []
+    studentIndex = 0
     def __init__(self, name):
         super().__init__(name)
         Student.studentPositions.append((self.left, self.top))
@@ -29,6 +30,12 @@ class Student(Avatar):
                         [0, 0, 4, 0, 0, 4, 0, 0],
                         [0, 0, 5, 0, 0, 5, 0, 0]]
         self.colors = self.pickColors() + ['black']
+        self.index = Student.studentIndex
+        Student.studentIndex += 1
+    
+    def setPosition(self, left, top):
+        super().setPosition(left, top)
+        Student.studentPositions[self.index] = (left,top)
 
     def pickColors(self):
         colors = []

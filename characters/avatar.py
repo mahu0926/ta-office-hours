@@ -14,6 +14,8 @@ class Avatar:
         self.top = 0
         Avatar.avatarPositions.append((self.left, self.top))
         self.label = 'avatar'
+        self.width = 40
+        self.height = 100
 
     def __repr__(self):
             return f'I am a {self.label}. My name is {self.name}.'
@@ -39,7 +41,6 @@ class Avatar:
 
     def drawItem(self):
         item = self.avatar
-        print(item)
         colors = self.colors
         left, top = (self.left, self.top)
         rows, cols = len(item), len(item[0])
