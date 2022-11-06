@@ -16,7 +16,9 @@ class codeTracing():
             for string in range(len(self.answer)):
                 if self.answer[string] != []:
                     drawLabel(self.answer[string][0], 370, 630 + 20 * string, size = 16, align = 'left', font = 'monospace')
-    
+        drawRect(860, 570, 150, 40, fill='lightGreen', border='black')
+        drawLabel('Submit', 890, 585, align='left-top', font='monospace', size=20)
+
     #modification entries are enter, add, delete as string
     def modifyAnswer(self, modification, addedChar = ''):
         if modification == 'enter':
@@ -34,6 +36,9 @@ class codeTracing():
 
     def checkAnswer(self):
         return self.answer == self.realAnswer
+    
+    def resetAnswer(self):
+        self.answer = [['']]
 
 def loadCodeTracings(app):
     app.codeTracings = []

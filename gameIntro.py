@@ -106,6 +106,7 @@ def splash_redrawAll(app):
 ##################################
 
 def intro_onScreenStart(app):
+    app.setMaxShapeCount(5000)
     app.speaker = 'Lauren'
     app.speechCount = 0
     app.instructions = ["Congratulations on becoming a 15-112 TA, and welcome \
@@ -1124,4 +1125,4 @@ def loadConceptual(app):
 def main():
     runAppWithScreens(initialScreen='splash', width=1200, height=800)
 
-main()
+main() 
