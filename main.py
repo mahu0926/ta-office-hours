@@ -9,6 +9,7 @@ import random
 
 def onAppStart(app):
     app.isGameOver = False
+    app.doingCodeTracing = False
     restart(app)
 
 def restart(app):
@@ -92,14 +93,6 @@ def onKeyPress(app, key):
         if app.selectedQuestion != None:
             if key == 'enter':
                 app.selectedQuestion.modifyAnswer('enter')
-                if app.selectedQuestion.solved == True:
-                    app.score += 1
-                    app.queue[app.queuePosition][2] = True
-                    app.queuePosition = (app.queuePosition + 1)
-                    if app.queuePosition == app.numStudents:
-                        studentsAndTablesAndQueue(app)
-                        app.queuePosition = 0
-                    app.selectedQuestion = None
             elif key == 'backspace':
                 app.selectedQuestion.modifyAnswer('delete')
             else:
@@ -125,11 +118,24 @@ def onKeyHold(app, keys):
                             app.selectedQuestion = CodeTracing.codetracings[randomNum]
                         else:
                             app.isGameOver = True
+                    app.doingCodeTracing = True
 
             else:
                 app.main_player.changeIntersection(isLeft, isRight, isTop, isBottom)
                 app.message = 'Go help the next student in queue'
                 app.currStudent = None
+
+def onMousePress(app, mouseX, mouseY):
+    if app.selectedQuestion != None and (860 <= mouseX <= 1010 and 570 <= mouseY <= 610):
+            app.selectedQuestion.checkAnswer()
+            if app.selectedQuestion.solved == True:
+                    app.score += 1
+                    app.queue[app.queuePosition][2] = True
+                    app.queuePosition = (app.queuePosition + 1)
+                    if app.queuePosition == app.numStudents:
+                        studentsAndTablesAndQueue(app)
+                        app.queuePosition = 0
+                    app.selectedQuestion = None
 
 def checkQueue(app, left, top, index):
     queueName = app.queue[app.queuePosition][0]

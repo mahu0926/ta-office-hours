@@ -12,6 +12,7 @@ class CodeTracing():
         self.solved = False
         self.realAnswer = answer
         self.index = CodeTracing.index
+        self.ctWin = None
         CodeTracing.codetracings.append(self)
         CodeTracing.index += 1
 
@@ -25,12 +26,16 @@ class CodeTracing():
             for string in range(len(self.answer)):
                 if self.answer[string] != []:
                     drawLabel(self.answer[string][0], 300, 630 + 20 * string, size = 16, align = 'left', font = 'monospace')
+        drawRect(860, 570, 150, 40, fill='lightGreen', border='black')
+        drawLabel('Submit', 890, 585, align='left-top', font='monospace', size=20)
+        if self.ctWin == False:
+            print("wheee")
+            drawLabel('That is not correct! Note: all characters must be exact', 
+                           580, 600, fill='red', font='monotone', size=16)
     
     #modification entries are enter, add, delete as string
     def modifyAnswer(self, modification, addedChar = ''):
         if modification == 'enter':
-            # check if the answer is correct
-            self.solved = True
             self.answer.append([''])
         elif modification == 'add':
             self.answer[-1][-1] += (addedChar)
@@ -44,7 +49,15 @@ class CodeTracing():
                     self.answer[-1][-1] = self.answer[-1][-1][:-1]
 
     def checkAnswer(self):
-        return self.answer == self.realAnswer
+        if self.answer == self.realAnswer:
+            # check if the answer is correct
+            self.solved = True
+        else:
+            self.ctWin = False
+            self.resetAnswer()
+
+    def resetAnswer(self):
+        self.answer = [['']]
 
     def loadCodeTracings(app):
         app.codeTracings = []
