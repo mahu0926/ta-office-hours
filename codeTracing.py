@@ -29,7 +29,6 @@ class CodeTracing():
         drawRect(860, 570, 150, 40, fill='lightGreen', border='black')
         drawLabel('Submit', 890, 585, align='left-top', font='monospace', size=20)
         if self.ctWin == False:
-            print("wheee")
             drawLabel('That is not correct! Note: all characters must be exact', 
                            580, 600, fill='red', font='monotone', size=16)
     

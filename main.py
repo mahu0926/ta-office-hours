@@ -1172,6 +1172,7 @@ def studentsAndTablesAndQueue(app):
         app.queue.append([app.students[i].name, i, False])
 
 def main_redrawAll(app):
+    drawRect(0, app.height/5, app.width, app.height/5*4, fill='antiqueWhite')
     if app.isGameOver == False:
         app.main_player.drawItem()
         isQuestionOpen = False
@@ -1253,5 +1254,5 @@ def checkQueue(app, left, top, index):
     return app.students[studentIndex].name == queueName
 
 def main():
-    runAppWithScreens(initialScreen='splash', width=1200, height=800)
+    runAppWithScreens(initialScreen='main', width=1200, height=800)
 main()
