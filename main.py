@@ -282,13 +282,6 @@ def drawQueue(app):
 def distance(x1, y1, x2, y2):
     return ((x2-x1)**2 + (y2-y1)**2)**0.5
 
-# ###### main gameplay screen ####
-# def main_redrawAll(app):
-#     drawRect(0,0,app.width,app.height,fill='green')
-
-# def main_onKeyPress(app, key):
-#     setActiveScreen('intro')
-
 ######################## storage stuff ######################## 
 def loadAvatars(app):
     app.playerAvatarColors = ['black', 'peachPuff', 'blue', 'lightBlue']
@@ -1144,7 +1137,7 @@ def restart(app):
 def studentsAndTablesAndQueue(app):
     app.students = []
     app.tables = []
-    app.names = ['Jeremy', 'Lucy', 'James', 'Alice', 'Cathy', 'Janice', 'Louis'
+    app.names = ['Jeremy', 'Lucy', 'James', 'Alice', 'Cathy', 'Janice', 'Louis',
                 'Mahati', 'Archita', 'Andrea', 'Grace', 'Nick', 'Tracy', 'Fran',
                 'Nasa', 'Bethany', 'Catherina', 'Sophia', 'Francesca', 'Darnell',
                 'Gretchen', 'Gertrude', 'Geronimo', 'George', 'Gargantan', 'Hollie',
@@ -1254,5 +1247,6 @@ def checkQueue(app, left, top, index):
     return app.students[studentIndex].name == queueName
 
 def main():
-    runAppWithScreens(initialScreen='main', width=1200, height=800)
+    runAppWithScreens(initialScreen='splash', width=1200, height=800)
+
 main()
