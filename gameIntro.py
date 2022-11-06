@@ -88,8 +88,6 @@ def setActiveScreen(screen):
 
 def splash_onScreenStart(app):
     app.setMaxShapeCount(5000)
-    app.color = 'gold'
-    app.startButton = 400
 
 def splash_onMousePress(app, mouseX, mouseY):
     if (app.width/2 - 125 <= mouseX <= app.width/2 + 125) and (550 <= mouseY <= 610):
@@ -113,8 +111,7 @@ def intro_onScreenStart(app):
     app.instructions = ["Congratulations on becoming a 15-112 TA, and welcome \
 to your\nfirst office hours! I know it can be kind of hectic, but you'll\nbe \
 okay. Here's some tips and tricks to help you:", 'Use the arrow keys to move.\
-A red exclamation mark will appear\nif you get close enough to \
-a character. Press the spacebar to\ninteract with them.', 
+ Press the spacebar to interact\nwith another character.', 
 "Your main goal is to help all of the students on the queue. \
 You\ncan access the queue by pressing the list button in the top right\ncorner.\
  Click it to see a sample queue.",
@@ -292,7 +289,31 @@ def main_redrawAll(app):
     drawRect(0,0,app.width,app.height,fill='green')
 
 def main_onKeyPress(app, key):
-    setActiveScreen('intro')
+    setActiveScreen('losing')
+
+##### ending screen #########
+
+def winning_redrawAll(app):
+    drawRect(0, 0, app.width, app.height, fill='blue')
+    drawString(app, "Congrats, you've survived", 50, 200, 12, 'white')
+    drawString(app, "OFFICE HOURS", 250, 350, 15, 'white')
+    drawString(app, 'Thank you for playing :)', app.width/2-430, 575, 10, 'white')
+    drawString(app, 'Created for Hack 112 by GAMA, 2022', app.width/2-300, 780, 4, 'darkGray')
+
+def winning_onKeyPress(app, key):
+    setActiveScreen('losing')
+
+def losing_redrawAll(app):
+    drawRect(0, 0, app.width, app.height, fill='blue')
+    drawString(app, 'You Lose!', 380, 200, 15, 'white')
+    drawString(app, 'Click to restart the game', app.width/2-450, 350, 10, 'white')
+    drawRect(app.width/2 - 125, 550, 250, 60, fill='white', border='gray')
+    drawString(app, 'Restart', app.width/2-65, 590, 4, 'dimGray')
+    drawString(app, 'Created for Hack 112 by GAMA, 2022', app.width/2-300, 780, 4, 'darkGray')
+
+def losing_onMousePress(app, mouseX, mouseY):
+    if (app.width/2 - 125 <= mouseX <= app.width/2 + 125) and (550 <= mouseY <= 610):
+        setActiveScreen('splash')
 
 ######################## storage stuff ######################## 
 def loadAvatars(app):
@@ -1122,6 +1143,6 @@ def loadConceptual(app):
     app.conceptual.append((ques1, choices1, ans1))
 
 def main():
-    runAppWithScreens(initialScreen='splash', width=1200, height=800)
+    runAppWithScreens(initialScreen='main', width=1200, height=800)
 
 main()
