@@ -87,6 +87,7 @@ def setActiveScreen(screen):
 ##################################
 
 def splash_onScreenStart(app):
+    app.setMaxShapeCount(5000)
     app.color = 'gold'
     app.startButton = 400
 
@@ -108,6 +109,7 @@ def splash_redrawAll(app):
 def intro_onScreenStart(app):
     app.setMaxShapeCount(5000)
     app.speaker = 'Lauren'
+    app.finishedTask = False
     app.speechCount = 0
     app.instructions = ["Congratulations on becoming a 15-112 TA, and welcome \
 to your\nfirst office hours! I know it can be kind of hectic, but you'll\nbe \
@@ -129,8 +131,8 @@ questions. Off you go!"]
     app.pixelSize = 5 
     app.avatarWidth = 40
     app.avatarHeight = 100
-    app.playerTop = 250
-    app.playerLeft = 100
+    app.playerTop = 350
+    app.playerLeft = 200
     # text attributes
     app.cellBorderWidth = 1
     app.cellWidth = 7
@@ -160,7 +162,7 @@ def intro_onKeyPress(app, key):
             app.ct.modifyAnswer('delete')
         else:
             app.ct.modifyAnswer('add', key)
-    elif key == 'n': 
+    elif key == 'n' and not app.finishedTask: 
         app.speechCount += 1
         if app.speechCount == 4:
             app.codeTracing = True
@@ -176,7 +178,7 @@ def intro_onKeyPress(app, key):
             setActiveScreen('main')
 
 def intro_onKeyHold(app, keys):
-    if app.speechCount >= 1:
+    if app.finishedTask:
         if 'up' in keys:
             app.playerTop -= 5
         if 'down' in keys:
@@ -204,7 +206,6 @@ def intro_onMousePress(app, mouseX, mouseY):
         app.problem.setAnswer(mouseX, mouseY)
         if app.problem.check(mouseX, mouseY):
             app.concept = False
-            print(app.codeTracing, app.freeResponse, app.concept)
     if not (app.codeTracing or app.freeResponse or app.concept) and app.speechCount >= 2:
         if distance(mouseX, mouseY, app.width-30, 30) < 20:
             app.showQueue = not app.showQueue
@@ -215,19 +216,20 @@ def intro_onMouseMove(app, mouseX, mouseY):
 def intro_redrawAll(app):
     # background
     drawImage("https://i.ibb.co/DRbhNJn/pixil-frame-0-3.png", 0, 0, width=1200)
-    if not (app.codeTracing or app.freeResponse or app.concept):
+    if not ((app.codeTracing or app.freeResponse or app.concept)):
         # characters
         drawItem(app, app.playerAvatar, app.playerAvatarColors, app.playerLeft, app.playerTop)
-        drawItem(app, app.denizAvatar, app.denizAvatarColors, 400, 400)
-        drawItem(app, app.livAvatar, app.livAvatarColors, 600, 400)
+        drawItem(app, app.denizAvatar, app.denizAvatarColors, 900, 400)
+        drawItem(app, app.livAvatar, app.livAvatarColors, 400, 650)
 
-        drawImage('https://i.ibb.co/Vx5NBFH/pixil-frame-0-2.png', 750, 200, width=300, height=450)
-        ### instructions
-        drawImage("https://i.ibb.co/W3C0swx/pixil-frame-0-8.png", 125, 570)
-        drawInstructions(app)
-        drawString(app, 'Press n to continue', 860, 750, 2.3, 'darkGray')
         ### Queue
         drawCircle(app.width-30, 30, 20, fill='white', border='black')
+        if not app.finishedTask:
+            drawImage('https://i.ibb.co/Vx5NBFH/pixil-frame-0-2.png', 750, 200, width=300, height=450)
+            ### instructions
+            drawImage("https://i.ibb.co/W3C0swx/pixil-frame-0-8.png", 125, 570)
+            drawInstructions(app)
+            drawString(app, 'Press n to continue', 860, 750, 2.3, 'darkGray')
         if app.showQueue:
             drawQueue(app)
             drawLine(app.width-35, 22, app.width-25, 38, lineWidth=2)
@@ -1019,7 +1021,6 @@ class freeResponse():
                 y1 = 60 + (550)//len(self.lines) * (line + 1) 
                 if y <= mouseY <= y1:
                     self.line = line
-                    print(self.line)
     
     def check(self):
         return self.line == self.incorrectLine
@@ -1048,7 +1049,6 @@ class freeResponse():
                 y1 = 60 + (550)//len(self.lines) * (line + 1) 
                 if y <= mouseY <= y1:
                     self.line = line
-                    print(self.line)
     
     def check(self):
         return self.line == self.incorrectLine
