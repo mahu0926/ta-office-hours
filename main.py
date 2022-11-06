@@ -1102,7 +1102,6 @@ class conceptual():
     def distance(x0, y0, x1, y1):
         return ((x0-x1)**2 + (y0-y1)**2) ** 0.5
 
-
 def loadConceptual(app):
     app.conceptual = []
     ques1 = ['What is the efficiency of: ', 
@@ -1235,7 +1234,7 @@ def main_onKeyHold(app, keys):
                 app.message = 'Go help the next student in queue'
                 app.currStudent = None
 
-def onMousePress(app, mouseX, mouseY):
+def main_onMousePress(app, mouseX, mouseY):
     if app.selectedQuestion != None and (860 <= mouseX <= 1010 and 570 <= mouseY <= 610):
             app.selectedQuestion.checkAnswer()
             if app.selectedQuestion.solved == True:
