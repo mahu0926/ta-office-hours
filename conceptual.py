@@ -5,7 +5,7 @@ class conceptual():
         self.answer = answer
         self.selectedAnswer = None
     
-    def drawConceptual(self):
+    def drawQuestion(self):
         drawLabel(self.question[0], 360, 70, size = 16, bold = True, font = 'monospace', align = 'left')
         for line in range(1,len(self.question)):
             y = 30 * (line) + 70

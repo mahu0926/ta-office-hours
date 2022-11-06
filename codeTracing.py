@@ -115,9 +115,17 @@ class CodeTracing():
             "print(q)"]
         c5Ans = [["44"], ["449"], ["446"]]
 
+        c6 = ["print(628%1)",
+        "print(628%10)",
+        "print(628%100)",
+        "print(628%1000)"]
+        c6Ans = [["0"], ["8"], ["28"], ["628"]]
+
     
         c1obj = CodeTracing(c1, c1Ans)
         c2obj = CodeTracing(c2, c2Ans)
         c3obj = CodeTracing(c3, c3Ans)
         c4obj = CodeTracing(c4, c4Ans)
         c5obj = CodeTracing(c5, c5Ans)
+        c6obj = CodeTracing(c6, c6Ans)
+        

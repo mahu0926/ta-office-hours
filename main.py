@@ -1110,8 +1110,9 @@ def loadConceptual(app):
 
 ########### main screen #################
 def main_onScreenStart(app):
-    app.isGameOver = False
     app.doingCodeTracing = False
+    app.timer = 300
+    app.steps = 0
     restart(app)
 
 def restart(app):
@@ -1130,7 +1131,8 @@ def restart(app):
     
     studentsAndTablesAndQueue(app)
     CodeTracing.loadCodeTracings(app)
-    app.winNum = len(CodeTracing.codetracings)
+    app.winNum = len(CodeTracing.codetracings) 
+    print(app.winNum, CodeTracing.codetracings)
     app.randomOrder = random.sample(range(0, app.winNum), app.winNum)
 
 
@@ -1164,69 +1166,69 @@ def studentsAndTablesAndQueue(app):
     for i in randomQueueIndices:
         app.queue.append([app.students[i].name, i, False])
 
+def main_onStep(app):
+    app.steps += 1
+    if app.steps % 10 == 0:
+        app.timer -= 1
+        app.steps = 0
+
 def main_redrawAll(app):
     drawRect(0, app.height/5, app.width, app.height/5*4, fill='antiqueWhite')
-    if app.isGameOver == False:
-        app.main_player.drawItem()
-        isQuestionOpen = False
+    drawRect(1000, 750, 200, 50, fill = 'white', border = 'black')
+    drawLabel(f"Time remaining: {app.timer}", 1100, 775, size = 16)
+    app.main_player.drawItem()
+    isQuestionOpen = False
 
-        if app.selectedQuestion != None:
-            if app.currStudent != None and checkQueue(app, *app.currStudent):
-                app.selectedQuestion.drawCodeTracing(app)
-                isQuestionOpen = True
-            elif app.currStudent == None: 
-                app.selectedQuestion.drawCodeTracing(app)
-                isQuestionOpen = True
+    if app.selectedQuestion != None:
+        if app.currStudent != None and checkQueue(app, *app.currStudent):
+            app.selectedQuestion.drawCodeTracing(app)
+            isQuestionOpen = True
+        elif app.currStudent == None: 
+            app.selectedQuestion.drawCodeTracing(app)
+            isQuestionOpen = True
 
-        if isQuestionOpen == False:
-            drawRect(0,0,app.width, 40, fill='lightgray')
-            for i in range(app.numStudents): 
-                app.students[i].drawItem()
-                app.tables[i].drawItem()
-                drawLabel(f'{app.students[i].name}', app.tables[i].left+50, app.tables[i].top+50)
-                drawLabel(f'Queue' ,50, 20, size=20)
-                fill='red' if app.queue[i][2] == False else 'green'
-                drawRect(-10+(app.width/(app.numStudents+1))*(i+1),0, (app.width/(app.numStudents+1))-10,40, fill=fill)
-                drawLabel(f'{app.queue[i][0]}' ,50+(app.width/(app.numStudents+1))*(i+1), 20, size=15)
-            if app.message != None:
-                drawLabel(app.message, app.width/2, 650)
+    if isQuestionOpen == False:
+        drawRect(0,0,app.width, 40, fill='lightgray')
+        for i in range(app.numStudents): 
+            app.students[i].drawItem()
+            app.tables[i].drawItem()
+            drawLabel(f'{app.students[i].name}', app.tables[i].left+50, app.tables[i].top+50)
+            drawLabel(f'Queue' ,50, 20, size=20)
+            fill='red' if app.queue[i][2] == False else 'green'
+            drawRect(-10+(app.width/(app.numStudents+1))*(i+1),0, (app.width/(app.numStudents+1))-10,40, fill=fill)
+            drawLabel(f'{app.queue[i][0]}' ,50+(app.width/(app.numStudents+1))*(i+1), 20, size=15)
+        if app.message != None:
+            drawLabel(app.message, app.width/2, 650)
 
 def main_onKeyPress(app, key):
-    if not app.isGameOver:
-        if app.selectedQuestion != None:
-            if key == 'enter':
-                app.selectedQuestion.modifyAnswer('enter')
-            elif key == 'backspace':
-                app.selectedQuestion.modifyAnswer('delete')
-            else:
-                app.selectedQuestion.modifyAnswer('add', key)
-
-    if app.isGameOver == True and key == 'r':
-        restart(app)
+    if app.selectedQuestion != None:
+        if key == 'enter':
+            app.selectedQuestion.modifyAnswer('enter')
+        elif key == 'backspace':
+            app.selectedQuestion.modifyAnswer('delete')
+        else:
+            app.selectedQuestion.modifyAnswer('add', key)
 
 def main_onKeyHold(app, keys):
-    if not app.isGameOver:
-        if not app.main_player.disableIntersection():
-            app.main_player.move(keys)
+    if not app.main_player.disableIntersection():
+        app.main_player.move(keys)
+    else:
+        left, top, isLeft, isRight, isTop, isBottom, index = app.main_player.disableIntersection()
+        app.currStudent = (left, top, index)
+
+        if checkQueue(app, *app.currStudent):
+            app.message = 'Press space to help the student'
+            if 'space' in keys:
+                if app.selectedQuestion == None or app.selectedQuestion.solved != True:
+                    if app.winNum != app.score:
+                        randomNum = app.randomOrder[app.score]
+                        app.selectedQuestion = CodeTracing.codetracings[randomNum]
+                app.doingCodeTracing = True
+
         else:
-            left, top, isLeft, isRight, isTop, isBottom, index = app.main_player.disableIntersection()
-            app.currStudent = (left, top, index)
-
-            if checkQueue(app, *app.currStudent):
-                app.message = 'Press space to help the student'
-                if 'space' in keys:
-                    if app.selectedQuestion == None or app.selectedQuestion.solved != True:
-                        if app.winNum != app.score:
-                            randomNum = app.randomOrder[app.score]
-                            app.selectedQuestion = CodeTracing.codetracings[randomNum]
-                        else:
-                            app.isGameOver = True
-                    app.doingCodeTracing = True
-
-            else:
-                app.main_player.changeIntersection(isLeft, isRight, isTop, isBottom)
-                app.message = 'Go help the next student in queue'
-                app.currStudent = None
+            app.main_player.changeIntersection(isLeft, isRight, isTop, isBottom)
+            app.message = 'Go help the next student in queue'
+            app.currStudent = None
 
 def main_onMousePress(app, mouseX, mouseY):
     if app.selectedQuestion != None and (860 <= mouseX <= 1010 and 570 <= mouseY <= 610):
@@ -1247,6 +1249,6 @@ def checkQueue(app, left, top, index):
     return app.students[studentIndex].name == queueName
 
 def main():
-    runAppWithScreens(initialScreen='splash', width=1200, height=800)
+    runAppWithScreens(initialScreen='main', width=1200, height=800)
 
 main()
