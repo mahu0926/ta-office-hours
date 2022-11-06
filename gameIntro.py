@@ -104,6 +104,7 @@ def splash_redrawAll(app):
 # Screen2
 ##################################
 
+
 def intro_onScreenStart(app):
     app.speaker = 'Lauren'
     app.finishedTask = False
@@ -300,20 +301,17 @@ def winning_redrawAll(app):
     drawString(app, 'Thank you for playing :)', app.width/2-430, 575, 10, 'white')
     drawString(app, 'Created for Hack 112 by GAMA, 2022', app.width/2-300, 780, 4, 'darkGray')
 
-def winning_onKeyPress(app, key):
-    setActiveScreen('losing')
-
 def losing_redrawAll(app):
     drawRect(0, 0, app.width, app.height, fill='blue')
-    drawString(app, 'You Lose!', 380, 200, 15, 'white')
-    drawString(app, 'Click to restart the game', app.width/2-450, 350, 10, 'white')
-    drawRect(app.width/2 - 125, 550, 250, 60, fill='white', border='gray')
-    drawString(app, 'Restart', app.width/2-65, 590, 4, 'dimGray')
+    drawString(app, "OH NO!!", 380, 200, 15, 'white')
+    drawString(app, "You've been fired.", 150, 350, 15, 'white')
+    drawString(app, 'Thank you for playing :)', app.width/2-430, 575, 10, 'white')
     drawString(app, 'Created for Hack 112 by GAMA, 2022', app.width/2-300, 780, 4, 'darkGray')
 
 def losing_onMousePress(app, mouseX, mouseY):
-    if (app.width/2 - 125 <= mouseX <= app.width/2 + 125) and (550 <= mouseY <= 610):
-        setActiveScreen('splash')
+    setActiveScreen('winning')
+def winning_onMousePress(app, mouseX, mouseY):
+    setActiveScreen('losing')
 
 ######################## storage stuff ######################## 
 def loadAvatars(app):
@@ -1143,6 +1141,6 @@ def loadConceptual(app):
     app.conceptual.append((ques1, choices1, ans1))
 
 def main():
-    runAppWithScreens(initialScreen='main', width=1200, height=800)
+    runAppWithScreens(initialScreen='winning', width=1200, height=800)
 
 main()
