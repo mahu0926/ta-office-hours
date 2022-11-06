@@ -94,10 +94,10 @@ def splash_onMousePress(app, mouseX, mouseY):
 
 def splash_redrawAll(app):
     drawRect(0, 0, app.width, app.height, fill='blue')
-    drawLabel('15-112 OFFICE HOURS', app.width/2, 200, align='center',size=96, fill='white')
-    drawLabel('Sign in to begin!', app.width/2, 350, align='center',size=60, fill='white')
-    drawRect(app.width/2 - 125, 500, 250, 60, fill='white')
-    drawLabel('Sign in as a TA', app.width/2, 530, size=20)
+    drawString(app, '15-112 OFFICE HOURS', 50, 200, 15, 'white')
+    drawString(app, 'Sign in to begin!', app.width/2-275, 350, 10, 'white')
+    drawRect(app.width/2 - 125, 500, 250, 60, fill='white', border='gray')
+    drawString(app, 'Sign in as a TA', app.width/2-110, 540, 4, 'darkGray')
 
 ##################################
 # Screen2
@@ -106,15 +106,16 @@ def splash_redrawAll(app):
 def intro_onScreenStart(app):
     app.speaker = 'Lauren'
     app.speechCount = 0
-    app.instructions = ["Congratulations on becoming a 15-112 TA, and welcome\n\
-to your first office hours! I know it can be kind of hectic\nbut you'll be \
+    app.instructions = ["Congratulations on becoming a 15-112 TA, and welcome \
+to your\nfirst office hours! I know it can be kind of hectic, but you'll\nbe \
 okay. Here's some tips and tricks to help you:", 'Use the arrow keys to move.\
-A red exclamation mark will appear if you get close enough to \
-a\ncharacter. Press the  spacebar to interact with them.', 
-"Your main goal is to help all of the students on the queue.\
-You can access the queue by pressing\nthe list button in the top right corner. \
-When the queue is empty, you're free to go!\nLet me know if you haveany other \
+A red exclamation mark will appear\nif you get close enough to \
+a character. Press the spacebar to\ninteract with them.', 
+"Your main goal is to help all of the students on the queue. \
+You\ncan access the queue by pressing the list button in the top right\ncorner.",
+"When the queue is empty, you're free to go! Let me know if you\nhave any other \
 questions. Off you go!"]
+    app.showQueue = False
     app.pixelSize = 5 
     app.avatarWidth = 40
     app.avatarHeight = 100
@@ -127,11 +128,14 @@ questions. Off you go!"]
     app.lettersToPixelsAnnoying = dict()
     makePixelDict(app)
     loadAvatars(app)
-    loadObjects(app)
 
 def intro_onKeyPress(app, key):
-    if key == 'n' and app.speechCount < len(app.instructions): 
+    if key == 'n': 
         app.speechCount += 1
+        if app.speechCount == len(app.instructions):
+            app.speaker = 'You'
+        if app.speechCount > len(app.instructions):
+            setActiveScreen('main')
 
 def intro_onKeyHold(app, keys):
     if app.speechCount >= 1:
@@ -145,43 +149,52 @@ def intro_onKeyHold(app, keys):
             app.playerLeft += 5
 
 def intro_onMousePress(app, mouseX, mouseY):
-    pass
-    #if app.distance(mouseX, mouseY)
+    if distance(mouseX, mouseY, app.width/2-30, 30) < 20:
+        app.showQueue = not app.showQueue
 
 def intro_redrawAll(app):
     ### background
-    drawRect(0, 0, app.width, app.height, fill='lightgray')
+    drawImage("https://i.ibb.co/DRbhNJn/pixil-frame-0-3.png", 600, 0)
+    drawImage("https://i.ibb.co/DRbhNJn/pixil-frame-0-3.png", 0, 0)
     ### characters
-    drawItem(app, app.laurenAvatar, app.laurenAvatarColors, 600, 400)
-    drawItem(app, app.playerAvatar, app.playerAvatarColors, app.playerLeft, app.playerTop)
+    #drawItem(app, app.laurenAvatar, app.laurenAvatarColors, 600, 400)
+    #drawItem(app, app.playerAvatar, app.playerAvatarColors, app.playerLeft, app.playerTop)
     ### instruction boxes
-    drawRect(app.width/2-450, 625, 900, 125, fill='beige', border='pink')
-    drawRect(app.width/2-450, 585, 150, 40, fill='beige', border='pink')
+    drawImage('https://i.ibb.co/Vx5NBFH/pixil-frame-0-2.png', 750, 200, width=300, height=450)
+    drawImage("https://i.ibb.co/W3C0swx/pixil-frame-0-8.png", 125, 570)
     drawInstructions(app)
-    drawString(app, 'Press n to continue', 950, 740, 2)
+    drawString(app, 'Press n to continue', 860, 750, 2.3, 'darkGray')
     ### extra stuff
     drawCircle(app.width - 30, 30, 20, fill='white', border='black')
-    for x in range(3):
-        y = 22 + 8*x
-        drawLine(app.width-40, y, app.width-20, y)
-    drawImage('https://i.ibb.co/Vx5NBFH/pixil-frame-0-2.png', 800, 200, width=200, height=300)
+    if app.showQueue:
+        pass
+    else:
+        for x in range(3):
+            y = 22 + 8*x
+            drawLine(app.width-40, y, app.width-20, y)
 
 def drawInstructions(app):
     startY = 660
-    instruction = app.instructions[app.speechCount]
-    drawString(app, app.speaker, app.width/2-375, 605, 4)
+    if app.speaker == 'Lauren':
+        instruction = app.instructions[app.speechCount]
+        fill='red'
+    else:
+        instruction = 'Thanks.'
+        fill = 'blue'
+    drawString(app, app.speaker, 250-7*len(app.speaker), 610, 3.5, fill)
     for line in instruction.splitlines():
-        drawString(app, line, app.width/2 - 425, startY, 3.5)
+        drawString(app, line, app.width/2 - 425, startY, 3.5, 'black')
         startY += 35
 
-##################### queue screen ##################
+def distance(x1, y1, x2, y2):
+    return ((x2-x1)**2 + (y2-y1)**2)**0.5
 
-def queue_onScreenStart(app):
-    pass
+###### main gameplay screen ####
+def main_redrawAll(app):
+    drawRect(0,0,app.width,app.height,fill='green')
 
-def queue_redrawAll(app):
-    pass
-
+def main_onKeyPress(app, key):
+    setActiveScreen('intro')
 
 ######################## storage stuff ######################## 
 def loadAvatars(app):
@@ -290,16 +303,6 @@ def loadAvatars(app):
                         [0, 0, 4, 0, 0, 4, 0, 0],
                         [0, 0, 4, 0, 0, 4, 0, 0],
                         [0, 0, 5, 0, 0, 5, 0, 0]]
- 
-def loadObjects(app):
-    app.tableColors = ['peru', 'saddleBrown']
-    app.table = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                 [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                 [0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0],
-                 [0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0],
-                 [0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0],
-                 [0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0],
-                 [0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0]]
 
 def drawItem(app, item, colors, left, top):
     rows, cols = len(item), len(item[0])
@@ -742,42 +745,40 @@ def makePixelDict(app):
  app.lettersToPixels["'"] = letterApos
  app.lettersToPixels[':'] = letterColon
 
-def drawString(app, string, startingX, startingY, size):
+def drawString(app, string, startingX, startingY, size, color):
  leftX = startingX
  bottomY = startingY
  for char in string:
    if not char.isspace():
      letter = getLetter(app, char)
      if char in app.lettersToPixels:
-       drawLetter(app, letter, leftX, bottomY-len(letter)*size, size)
+       drawLetter(app, letter, leftX, bottomY-len(letter)*size, size, color)
        leftX += len(letter[0]) * size
      else:
-       drawLetter(app, letter, leftX, bottomY-3*size, size)
+       drawLetter(app, letter, leftX, bottomY-3*size, size, color)
        leftX += len(letter[0]) * size
    else:
      letter = [[0] * 3]
-     drawLetter(app, letter, leftX, bottomY-len(letter)*size, size)
+     drawLetter(app, letter, leftX, bottomY-len(letter)*size, size, color)
      leftX += len(letter[0]) * size
  
 def getLetter(app, char):
  if app.lettersToPixels.get(char) != None:
-   print(char, app.lettersToPixels.get(char))
    return app.lettersToPixels.get(char)
  else:
-   print(char, app.lettersToPixelsAnnoying.get(char))
    return app.lettersToPixelsAnnoying.get(char)
  
-def drawLetter(app, letter, startingX, startingY, size):
+def drawLetter(app, letter, startingX, startingY, size, color):
  for row in range(len(letter)):
    for col in range(len(letter[0])):
      if letter[row][col] == 1:
-       drawCell(app, row, col, 'black', startingX, startingY, size)
+       drawCell(app, row, col, color, startingX, startingY, size)
  
 def drawCell(app, row, col, color, startingX, startingY, size, pieceOpac=100):
    cellLeft, cellTop = getCellLeftTop(app, row, col, startingX, startingY, size)
    cellWidth, cellHeight = getCellSize(app)
    drawRect(cellLeft, cellTop, size, size,
-            fill=color, border='black',
+            fill=color, border=color,
             borderWidth=app.cellBorderWidth, opacity = pieceOpac)
  
 def getCellLeftTop(app, row, col, startingX, startingY, size):
@@ -796,6 +797,6 @@ def getCellSize(app):
 ##################################
 
 def main():
-    runAppWithScreens(initialScreen='intro', width=1200, height=800)
+    runAppWithScreens(initialScreen='splash', width=1200, height=800)
 
 main()
