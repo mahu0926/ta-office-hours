@@ -16,15 +16,15 @@ class CodeTracing():
         CodeTracing.index += 1
 
     def drawCodeTracing(self, app):
-        drawImage("https://i.ibb.co/z8n2Md6/pixil-frame-0-7.png",300, 25, height = 750)
+        drawImage("https://i.ibb.co/z8n2Md6/pixil-frame-0-7.png",200, 25, height = 750)
         for line in range(len(self.lines)):
-            drawLabel(self.lines[line], 350, 60 + (550)//len(self.lines) * line, font = 'monospace',
+            drawLabel(self.lines[line], 300, 60 + (550)//len(self.lines) * line, font = 'monospace',
                       align = 'left', size = 16)
-        drawRect(360, 610, 750, 100, fill = None, border = 'black')
+        drawRect(250, 610, 750, 100, fill = None, border = 'black')
         if self.answer != [[]]:
             for string in range(len(self.answer)):
                 if self.answer[string] != []:
-                    drawLabel(self.answer[string][0], 370, 630 + 20 * string, size = 16, align = 'left', font = 'monospace')
+                    drawLabel(self.answer[string][0], 300, 630 + 20 * string, size = 16, align = 'left', font = 'monospace')
     
     #modification entries are enter, add, delete as string
     def modifyAnswer(self, modification, addedChar = ''):
@@ -103,14 +103,9 @@ class CodeTracing():
             "print(q)"]
         c5Ans = [["44"], ["449"], ["446"]]
 
-        # app.codeTracings.append((c1, c1Ans))
-        # app.codeTracings.append((c2, c2Ans))
-        # app.codeTracings.append((c3, c3Ans))
-        # app.codeTracings.append((c4, c4Ans))
-        # app.codeTracings.append((c5, c5Ans))
-
-        CodeTracing.codetracings.append(CodeTracing(c1, c1Ans))
-        CodeTracing.codetracings.append(CodeTracing(c2, c2Ans))
-        CodeTracing.codetracings.append(CodeTracing(c3, c3Ans))
-        CodeTracing.codetracings.append(CodeTracing(c4, c4Ans))
-        CodeTracing.codetracings.append(CodeTracing(c5, c5Ans))
+    
+        c1obj = CodeTracing(c1, c1Ans)
+        c2obj = CodeTracing(c2, c2Ans)
+        c3obj = CodeTracing(c3, c3Ans)
+        c4obj = CodeTracing(c4, c4Ans)
+        c5obj = CodeTracing(c5, c5Ans)
