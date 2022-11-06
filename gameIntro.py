@@ -89,15 +89,15 @@ def splash_onScreenStart(app):
     app.startButton = 400
 
 def splash_onMousePress(app, mouseX, mouseY):
-    if (app.width/2 - 125 <= mouseX <= app.width/2 + 125) and (500 <= mouseY <= 560):
+    if (app.width/2 - 125 <= mouseX <= app.width/2 + 125) and (550 <= mouseY <= 610):
         setActiveScreen('intro')
 
 def splash_redrawAll(app):
     drawRect(0, 0, app.width, app.height, fill='blue')
     drawString(app, '15-112 OFFICE HOURS', 50, 200, 15, 'white')
     drawString(app, 'Sign in to begin!', app.width/2-275, 350, 10, 'white')
-    drawRect(app.width/2 - 125, 500, 250, 60, fill='white', border='gray')
-    drawString(app, 'Sign in as a TA', app.width/2-110, 540, 4, 'darkGray')
+    drawRect(app.width/2 - 125, 550, 250, 60, fill='white', border='gray')
+    drawString(app, 'Sign in as a TA', app.width/2-110, 590, 4, 'dimGray')
 
 ##################################
 # Screen2
@@ -116,11 +116,13 @@ You\ncan access the queue by pressing the list button in the top right\ncorner."
 "When the queue is empty, you're free to go! Let me know if you\nhave any other \
 questions. Off you go!"]
     app.showQueue = False
+    # character attributes
     app.pixelSize = 5 
     app.avatarWidth = 40
     app.avatarHeight = 100
-    app.playerTop = 200
-    app.playerLeft = 200
+    app.playerTop = 250
+    app.playerLeft = 100
+    # text attributes
     app.cellBorderWidth = 1
     app.cellWidth = 7
     app.cellHeight = 7
@@ -149,25 +151,27 @@ def intro_onKeyHold(app, keys):
             app.playerLeft += 5
 
 def intro_onMousePress(app, mouseX, mouseY):
-    if distance(mouseX, mouseY, app.width/2-30, 30) < 20:
-        app.showQueue = not app.showQueue
+    if app.speechCount >= 2:
+        if distance(mouseX, mouseY, app.width-30, 30) < 20:
+            app.showQueue = not app.showQueue
 
 def intro_redrawAll(app):
     ### background
-    drawImage("https://i.ibb.co/DRbhNJn/pixil-frame-0-3.png", 600, 0)
-    drawImage("https://i.ibb.co/DRbhNJn/pixil-frame-0-3.png", 0, 0)
-    ### characters
-    #drawItem(app, app.laurenAvatar, app.laurenAvatarColors, 600, 400)
-    #drawItem(app, app.playerAvatar, app.playerAvatarColors, app.playerLeft, app.playerTop)
-    ### instruction boxes
+    #drawImage("https://i.ibb.co/DRbhNJn/pixil-frame-0-3.png", 600, 0)
+    drawImage("https://i.ibb.co/DRbhNJn/pixil-frame-0-3.png", 0, 0, width=1200)
+    # Lauren
+    drawItem(app, app.playerAvatar, app.playerAvatarColors, app.playerLeft, app.playerTop)
     drawImage('https://i.ibb.co/Vx5NBFH/pixil-frame-0-2.png', 750, 200, width=300, height=450)
+    ### instructions
     drawImage("https://i.ibb.co/W3C0swx/pixil-frame-0-8.png", 125, 570)
     drawInstructions(app)
     drawString(app, 'Press n to continue', 860, 750, 2.3, 'darkGray')
-    ### extra stuff
-    drawCircle(app.width - 30, 30, 20, fill='white', border='black')
+    ### Queue
+    drawCircle(app.width-30, 30, 20, fill='white', border='black')
     if app.showQueue:
-        pass
+        drawQueue(app)
+        drawLine(app.width-35, 22, app.width-25, 38, lineWidth=2)
+        drawLine(app.width-35, 38, app.width-25, 22, lineWidth=2)
     else:
         for x in range(3):
             y = 22 + 8*x
@@ -185,6 +189,22 @@ def drawInstructions(app):
     for line in instruction.splitlines():
         drawString(app, line, app.width/2 - 425, startY, 3.5, 'black')
         startY += 35
+
+def drawQueue(app):
+    drawRect(app.width/2-300, app.height/2-350, 600, 700, fill='white', border='black')
+    studentCenter = 350
+    taskCenter = 550
+    locCenter = 730
+    drawString(app, 'Student', studentCenter-5*len('Student'), 100, 6, 'black')
+    drawString(app, 'Task', taskCenter-5*len('Task'), 100, 6, 'black')
+    drawString(app, 'Location', locCenter-5*len('Location'), 100, 6, 'black')
+    # queue = [('Martin', 'CT', 'Table 1'), ('Red', 'FRQ', 'Table 2')]
+    # for i in range(len(queue)):
+    #     student, task, loc = queue[i]
+    #     row = 200 + 100*i
+    #     drawString(app, student, studentCenter-3*len(student), row, 4, 'black')
+    #     drawString(app, task, taskCenter-2*len(task), row, 4, 'black')
+    #     drawString(app, loc, locCenter-2*len(loc), row, 4, 'black')
 
 def distance(x1, y1, x2, y2):
     return ((x2-x1)**2 + (y2-y1)**2)**0.5
