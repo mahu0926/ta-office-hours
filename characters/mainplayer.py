@@ -32,7 +32,7 @@ class Main_Player(Avatar):
 
     def disableIntersection(self):
         positions = Student.studentPositions
-        for (left, top) in positions:
+        for (left, top, index) in positions:
             width = self.width
             height = self.height
             right, bottom  = (left+width, top+height)
@@ -42,10 +42,7 @@ class Main_Player(Avatar):
             mpright = mpleft + width
             mpbottom = mptop + height
 
-            isLeft = False
-            isRight = False
-            isTop = False
-            isBottom = False
+            isLeft, isRight, isTop, isBottom = (False, False, False, False)
 
             if mpright >= left and right >= mpright: # right
                 isRight = True
@@ -56,7 +53,7 @@ class Main_Player(Avatar):
             elif mpbottom >= top and mpbottom <= bottom: # bottom
                 isBottom = True    
             if (isRight or isLeft) and (isTop or isBottom):
-                return (left, top, isLeft, isRight, isTop, isBottom)
+                return (left, top, isLeft, isRight, isTop, isBottom, index)
         return False
             
     def changeIntersection(self, isLeft, isRight, isTop, isBottom):
